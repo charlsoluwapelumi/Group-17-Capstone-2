@@ -1,28 +1,23 @@
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-const express = require("express"); 
-const cors = require("cors");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const cloudinary = require("cloudinary");
+// Loads environment variables from a .env file into process.env
+require('dotenv').config()
 
-const app = express(); 
-const PORT = process.env.PORT || 3000; 
+const port = process.env.PORT
 
-app.use(cors());
+app.use(cors())
+app.use(bodyParser.json())
 
-// parse requests of content-type - application/json
-app.use(express.json());
+// User Routes
+app.use('/api/v1', require('./api/users'))
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
+// Property Routes
 
-// For testing purposes 
-app.get("/", (req, res) => { 
-    res.json({ message: "Welcome to ApexHauz" });
-}); 
+// Report Routes
 
-require("./src/routes/user.route.js")(app);
-
-app.listen(PORT, () => { 
-    console.log(`Server is listening on port ${PORT}`); 
-});
+app.listen(port, () => {
+    console.log(`Server started successfully, listening on port ${port}`)
+})
