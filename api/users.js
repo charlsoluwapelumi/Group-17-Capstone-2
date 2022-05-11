@@ -61,3 +61,62 @@ router.post('/auth/signup', async (req, res) => {
         console.log(error)
     }
 })
+router.post('/auth/signin', async (req, res) => {
+    try {
+        // Get user input
+    const { email, password} = req.body
+
+    // Validate user input
+    if (!(email && password )) {
+        res.status(400).send("All input is required");
+    }
+
+   
+    // Validate if user exist in our database
+    const user =  await User.query().findOne({email: email });
+
+    if (!user) {
+      return res.status(404).send("User does not exist. Please change your selection");
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+
+    let token
+    if(isPasswordValid) {
+        // Create token
+        token = jwt.sign(
+            { user_id: user.id, email },
+            process.env.SECRET_KEY,
+            {
+            expiresIn: 86400 // 24 hours
+            }
+        );
+    }
+
+    const data = {
+        token,
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+    }
+    
+    return res.json({
+          status: 'success',
+          data: data
+      })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.get('/users', async (req, res) => {
+    const users = await User.query()
+
+    return res.json({
+        status: 'success',
+        data: users
+    })
+})
+
+module.exports = router
