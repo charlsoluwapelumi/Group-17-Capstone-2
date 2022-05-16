@@ -36,5 +36,24 @@ router.post('/property', authenticateToken, async (req, res) => {
     })
 })
 
+// PATCH /property/<:property-id>: Update property data
+// Note: Include any field you will like to update in your request object and only update those fields
+router.patch('/property/:id', authenticateToken, async (req, res) => {
+    
+    const propertyId = req.params.id
+
+
+    // Get property input
+    const { type, state, city, address, price, created_on} = req.body
+
+    const property = await Property.query().patchAndFetchById(propertyId, {type,state, city, address, price, created_on})
+    
+
+    return res.json({
+        status: 'success',
+        data: property
+    })
+})
+
 
 module.exports = router
