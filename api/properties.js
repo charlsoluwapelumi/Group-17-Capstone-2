@@ -5,21 +5,12 @@ const authenticateToken = require('../middleware/authenticateToken')
 const uploadImage = require('./helpers/uploadFile')
 
 
-router.get('/properties', authenticateToken, async (req, res) => {
-    const properties = await Property.query()
-
-    return res.json({
-        statgus: 'success',
-        data: properties
-    })
-})
-
-
-router.post('/properties', authenticateToken, async (req, res) => {
+// POST /property: Create a property advert
+router.post('/property', authenticateToken, async (req, res) => {
     const user = req.user
 
     // Get property input
-    const {status, type, state, city, address, price, created_on} = req.body
+    const { type, state, city, address, price, created_on} = req.body
     const file = req.files.file
 
     const fileType  = file.mimetype.split('/')[0]
@@ -28,7 +19,6 @@ router.post('/properties', authenticateToken, async (req, res) => {
     const imageUrl =  await uploadImage(filePath, fileType, folder)
 
     const property = await Property.query().insert({
-        status,
         type,
         state,
         city,
@@ -41,7 +31,7 @@ router.post('/properties', authenticateToken, async (req, res) => {
     
 
     return res.json({
-        statgus: 'success',
+        status: 'success',
         data: property
     })
 })
