@@ -56,4 +56,19 @@ router.patch('/property/:id', authenticateToken, async (req, res) => {
 })
 
 
+//GET /property/<:property-id>: Get a specific property by ID
+router.get('/property/:id', authenticateToken, async (req, res) => {
+    const user = req.user
+    
+    const propertyId = req.params.id
+
+    const property =  await Property.query().findById(propertyId)
+
+
+    return res.json({
+        status: 'success',
+        data:  property
+    })
+})
+
 module.exports = router
