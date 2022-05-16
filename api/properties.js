@@ -55,5 +55,22 @@ router.patch('/property/:id', authenticateToken, async (req, res) => {
     })
 })
 
+// PATCH /property/<:property-id>/sold: Mark a property as sold
+router.patch('/property/:id/sold', authenticateToken, async (req, res) => {
+
+    const propertyId = req.params.id
+
+    // Get property input
+    const { status } = req.body
+
+    const property = await Property.query().patchAndFetchById(propertyId, status)
+    
+
+    return res.json({
+        status: 'success',
+        data: property
+    })
+})
+
 
 module.exports = router
