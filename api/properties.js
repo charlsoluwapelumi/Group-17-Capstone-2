@@ -56,4 +56,22 @@ router.patch('/property/:id', authenticateToken, async (req, res) => {
 })
 
 
+//GET /property/search?type=propertyType: Get all properties with a specific type
+router.get('/properties/search', authenticateToken, async (req, res) => {
+
+    // Get property search input
+   const {type} = req.query
+
+   const property = await Property.query().where('type', type)
+
+   return res.json({
+       status: 'success',
+       data: property
+   })
+})
+
+
+
+
+
 module.exports = router
