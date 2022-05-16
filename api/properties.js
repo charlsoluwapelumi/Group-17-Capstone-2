@@ -121,4 +121,14 @@ router.get('/property/:id', authenticateToken, async (req, res) => {
     })
 })
 
+// GET /property: Get all properties
+router.get('/property', authenticateToken, async (req, res) => {
+    const properties = await Property.query()
+
+    return res.json({
+        status: 'success',
+        data: properties
+    })
+})
+
 module.exports = router
